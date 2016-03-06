@@ -6,7 +6,7 @@
 #include <iterator>
 #include <list>
 #include <deque>
-#include <time.h>
+#include <ctime>
 #include <algorithm>
 
 #ifndef CNSLSNK_H
@@ -14,7 +14,6 @@
 
 typedef unsigned short int usi;
 enum Direction{ North, West, South, East };
-enum TypeOfPoint{Fild, Wall, Food};
 
 class Voxel {
 public:
@@ -22,8 +21,11 @@ public:
 	Voxel(GLfloat x = 0, GLfloat y= 0, GLfloat z = 0, GLfloat size = 1);
 	~Voxel();
 
+	GLfloat GetX() const { return theX; }
+	GLfloat GetY() const { return theY; }
+
 	void Paint(void);
-	void Muve(Direction direction);
+	void Move(Direction direction);
 
 	bool operator==(Voxel & rsh) const;
 
@@ -37,29 +39,33 @@ public:
 	Snake();
 	~Snake();
 	void IncreaseSnake();
-	void Eat();
-	void Digestion();
+	void Eat(Voxel food);
 	void Move();
 	void Paint();
 	Direction SnakeDirection;
-	std::deque<Voxel> eaten;
+	Voxel GetHead() const { return *snake.begin(); }
+	bool SelfDestruction();
 private:
 	std::list<Voxel> snake;
+	std::deque<Voxel> eaten;
 };
 
-class CnslSnk{
+class SnakeGame{
 public:
-	CnslSnk();
-	~CnslSnk();
-	void Initialisation();
+	SnakeGame();
+	SnakeGame(GLfloat xSize, GLfloat ySize);
+	~SnakeGame();
 	void Visualisation();
 	void GenerateFood();
 	bool Crash();
-	Snake ConsoleSnake;
+	void Turn(Direction side);
+	void Play();
+private:
+	usi theGameSpeed = 100;
+	Snake theSnake;
 	std::list<Voxel> food;
-private: 
-	char **GameArea = nullptr;
-	const usi Ax = 100, Ay = 40;
+	GLfloat *Ax = nullptr;
+	GLfloat *Ay = nullptr;
 };
 
 #endif
