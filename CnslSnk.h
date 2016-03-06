@@ -1,3 +1,4 @@
+#include <GL\glut.h>
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
@@ -8,32 +9,28 @@
 #include <time.h>
 #include <algorithm>
 
+#ifndef CNSLSNK_H
+#define CNSLSNK_H
+
 typedef unsigned short int usi;
 enum Direction{ North, West, South, East };
 enum TypeOfPoint{Fild, Wall, Food};
 
-class Point {
+class Voxel {
 public:
-	Point();
-	Point(usi x, usi y);
-	~Point();
-    
-	usi GetX() const { return theX; }
-	usi GetY() const { return theY; }
-	void SetX(usi x) { theX = x; }
-	void SetY(usi y) { theY = y; }
+	Voxel();
+	Voxel(GLfloat x = 0, GLfloat y= 0, GLfloat z = 0, GLfloat size = 1);
+	~Voxel();
 
-	bool operator==(const Point & rsh);
-    
-	void East();
-	void West();
-	void North();
-	void South();
-    
+	void Paint(void);
+	void Muve(Direction direction);
+
+	bool operator==(Voxel & rsh) const;
+
 private:
-	TypeOfPoint theType;
-	usi theX, theY;
+	GLfloat theX, theY, theZ, theSize;
 };
+
 
 class Snake {
 public:
@@ -43,9 +40,11 @@ public:
 	void Eat();
 	void Digestion();
 	void Move();
-	std::list<Point> snake;
+	void Paint();
 	Direction SnakeDirection;
-	std::deque<Point> eaten;
+	std::deque<Voxel> eaten;
+private:
+	std::list<Voxel> snake;
 };
 
 class CnslSnk{
@@ -57,8 +56,10 @@ public:
 	void GenerateFood();
 	bool Crash();
 	Snake ConsoleSnake;
-	std::list<Point> food;
+	std::list<Voxel> food;
 private: 
 	char **GameArea = nullptr;
 	const usi Ax = 100, Ay = 40;
 };
+
+#endif
