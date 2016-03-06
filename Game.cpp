@@ -4,27 +4,22 @@
 //int const sX = GetSystemMetrics(SM_CXSCREEN)2;
 //int const sY = GetSystemMetrics(SM_CYSCREEN);
 
-int const sX = 800, const sY = 600;
-int const pX = 10, const pY = 10;
-static Direction dir = East;
+usi const sX = 800, const sY = 600;
+usi const pX = 10, const pY = 10;
 static Snake tstsnake;
+static SnakeGame game((GLfloat)sX, (GLfloat)sY);
 
 void Init(void) {
-	glClearColor(0.3, 0.3, 0.3, 0.0);
+	glClearColor(0.2, 0.4, 0.2, 0.0);
 	glShadeModel(GL_FLAT);
 }
 
 void Display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glPushMatrix();
-	tstsnake.Paint();
+	game.Play();
 	glPopMatrix();
 	glutSwapBuffers();
-}
-
-void Move(void) {
-	tstsnake.Move();
-	glutPostRedisplay();
 }
 
 void Reshape(int w, int h) {
@@ -50,20 +45,16 @@ void Keyboard(unsigned char key, int x, int y) {
 void SpecKeys(int key, int x, int y) {
 	switch (key) {
 	case GLUT_KEY_UP:
-		tstsnake.SnakeDirection = North;
-		Move();
+		game.Turn(North);
 		break;
 	case GLUT_KEY_LEFT:
-		tstsnake.SnakeDirection = West;
-		Move();
+		game.Turn(West);
 		break;
 	case GLUT_KEY_DOWN:
-		tstsnake.SnakeDirection = South;
-		Move();
+		game.Turn(South);
 		break;
 	case GLUT_KEY_RIGHT:
-		tstsnake.SnakeDirection = East;
-		Move();
+		game.Turn(East);
 		break;
 	default:
 		glutIdleFunc(NULL);
