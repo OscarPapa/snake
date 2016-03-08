@@ -61,7 +61,7 @@ public:
 	void Turn(Direction side);
 	void Play();
 private:
-	usi theGameSpeed = 100;
+	usi theGameSpeed = 150;
 	Snake theSnake;
 	std::list<Voxel> food;
 	GLfloat *Ax = nullptr;
