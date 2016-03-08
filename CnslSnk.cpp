@@ -108,12 +108,12 @@ void SnakeGame::Turn(Direction side) {
 void SnakeGame::Play() {
 	if (food.empty())
 		GenerateFood();
-	Visualisation();
 	if (Crash()) {
 		Sleep(2000);
 		exit(0);
 	}
 	theSnake.Move();
+	Visualisation();
 	Sleep(theGameSpeed);
 }
 
