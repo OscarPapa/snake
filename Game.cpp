@@ -69,9 +69,9 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(sX, sY);
 	glutCreateWindow(argv[0]);
 	Init();
+	glutKeyboardFunc(Keyboard);
 	glutDisplayFunc(Display);
 	glutReshapeFunc(Reshape);
-	glutKeyboardFunc(Keyboard);
 	glutSpecialFunc(SpecKeys);
 	glutMainLoop();
 	return 0;
