@@ -20,15 +20,11 @@ public:
 	Voxel();
 	Voxel(GLfloat x = 0, GLfloat y= 0, GLfloat z = 0, GLfloat size = 1);
 	~Voxel();
-
 	GLfloat GetX() const { return theX; }
 	GLfloat GetY() const { return theY; }
-
 	void Paint(void);
 	void Move(Direction direction);
-
 	bool operator==(Voxel & rsh) const;
-
 private:
 	GLfloat theX, theY, theZ, theSize;
 };
@@ -60,8 +56,9 @@ public:
 	bool Crash();
 	void Turn(Direction side);
 	void Play();
+	usi theGameSpeed = 200;
 private:
-	usi theGameSpeed = 150;
+	bool CanITurnNow = true;
 	Snake theSnake;
 	std::list<Voxel> food;
 	GLfloat *Ax = nullptr;
