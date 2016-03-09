@@ -97,12 +97,15 @@ bool SnakeGame::Crash() {
 }
 
 void SnakeGame::Turn(Direction side) {
-	if((side == North || side == South) && (theSnake.SnakeDirection == North || theSnake.SnakeDirection == South))
-		return;
-	else if ((side == East || side == West) && (theSnake.SnakeDirection == East || theSnake.SnakeDirection == West))
-		return;
-	else
-		theSnake.SnakeDirection = side;
+	if (CanITurnNow) {
+		if ((side == North || side == South) && (theSnake.SnakeDirection == North || theSnake.SnakeDirection == South))
+			return;
+		else if ((side == East || side == West) && (theSnake.SnakeDirection == East || theSnake.SnakeDirection == West))
+			return;
+		else
+			theSnake.SnakeDirection = side;
+	}
+	CanITurnNow = false;
 }
 
 void SnakeGame::Play() {
@@ -113,8 +116,7 @@ void SnakeGame::Play() {
 		exit(0);
 	}
 	theSnake.Move();
-	Visualisation();
-	Sleep(theGameSpeed);
+	CanITurnNow = true;
 }
 
 //Snake----------------------------------------------
