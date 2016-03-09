@@ -1,78 +1,68 @@
-#include "CnslSnk.h"
+#include <GL\glut.h>
+#include <iostream>
+#include <conio.h>
+#include <Windows.h>
+#include <ctype.h>
+#include <iterator>
+#include <list>
+#include <deque>
+#include <ctime>
+#include <algorithm>
 
-//TODO fullscreen
-//int const sX = GetSystemMetrics(SM_CXSCREEN)2;
-//int const sY = GetSystemMetrics(SM_CYSCREEN);
+#ifndef CNSLSNK_H
+#define CNSLSNK_H
 
-usi const sX = 800, const sY = 600;
-usi const pX = 10, const pY = 10;
-static Snake tstsnake;
-static SnakeGame game((GLfloat)sX, (GLfloat)sY);
+typedef unsigned short int usi;
+enum Direction{ North, West, South, East };
 
-void Init(void) {
-	glClearColor(0.2, 0.4, 0.2, 0.0);
-	glShadeModel(GL_FLAT);
-}
+class Voxel {
+public:
+	Voxel();
+	Voxel(GLfloat x = 0, GLfloat y= 0, GLfloat z = 0, GLfloat size = 1);
+	~Voxel();
+	GLfloat GetX() const { return theX; }
+	GLfloat GetY() const { return theY; }
+	void Paint(void);
+	void Move(Direction direction);
+	bool operator==(Voxel & rsh) const;
+private:
+	GLfloat theX, theY, theZ, theSize;
+};
 
-void Display(void) {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glPushMatrix();
-	game.Play();
-	glPopMatrix();
-	glutSwapBuffers();
-}
 
-void Reshape(int w, int h) {
-	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-sX / 2, sX / 2, -sY / 2, sY / 2, -1.0, 1.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
+class Snake {
+public:
+	Snake();
+	~Snake();
+	void IncreaseSnake();
+	void Eat(Voxel food);
+	void Move();
+	void Paint();
+	Direction SnakeDirection;
+	Voxel GetHead() const { return *snake.begin(); }
+	bool SelfDestruction();
+private:
+	std::list<Voxel> snake;
+	std::deque<Voxel> eaten;
+};
 
-void Keyboard(unsigned char key, int x, int y) {
-	switch (key) {
-	case char(27) :
-		exit(0);
-		break;
-	default:
-		glutIdleFunc(NULL);
-		break;
-	}
-}
+class SnakeGame{
+public:
+	SnakeGame();
+	SnakeGame(GLfloat xSize, GLfloat ySize);
+	~SnakeGame();
+	void Visualisation();
+	void GenerateFood();
+	bool Crash();
+	void Turn(Direction side);
+	void Play();
+	usi theGameSpeed = 200;
+private:
+	bool CanITurnNow = true;
+	Snake theSnake;
+	std::list<Voxel> food;
+	GLfloat *Ax = nullptr;
+	GLfloat *Ay = nullptr;
+};
 
-void SpecKeys(int key, int x, int y) {
-	switch (key) {
-	case GLUT_KEY_UP:
-		game.Turn(North);
-		break;
-	case GLUT_KEY_LEFT:
-		game.Turn(West);
-		break;
-	case GLUT_KEY_DOWN:
-		game.Turn(South);
-		break;
-	case GLUT_KEY_RIGHT:
-		game.Turn(East);
-		break;
-	default:
-		glutIdleFunc(NULL);
-		break;
-	}
-}
-
-int main(int argc, char** argv) {
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-	glutInitWindowPosition(pX, pY);
-	glutInitWindowSize(sX, sY);
-	glutCreateWindow(argv[0]);
-	Init();
-	glutKeyboardFunc(Keyboard);
-	glutDisplayFunc(Display);
-	glutReshapeFunc(Reshape);
-	glutSpecialFunc(SpecKeys);
-	glutMainLoop();
-	return 0;
-}
+#endif
